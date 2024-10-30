@@ -171,6 +171,7 @@ resource "aws_launch_template" "lt" {
   name_prefix = "terrVPC-lt"
   image_id = "ami-0084a47cc718c111a"
   instance_type = "t2.micro"
+  key_name = "key_2"
   vpc_security_group_ids = [aws_security_group.sg.id]
   user_data = base64encode(file("userdata.sh"))
 }
@@ -196,6 +197,14 @@ resource "aws_autoscaling_group" "as" {
 
 }
 
+resource "aws_instance" "webserver1" {
+  ami                    = "ami-0084a47cc718c111a"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.sg.id]
+  subnet_id              = aws_subnet.pub_sub1.id
+  key_name = "key_2"
+  user_data              = base64encode(file("userdata.sh"))
+}
 
 
 output "loadbalancerdns" {
